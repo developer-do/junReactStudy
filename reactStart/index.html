@@ -16,11 +16,55 @@
 
     <!-- Load React. -->
     <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 
     <!-- Load our React component. -->
-    <script src="like_button.js"></script>
+    <!-- <script src="like_button.js"></script> -->
+
+    <script>
+
+       /**
+       * NOTE: 태그를 간편하게 생성하기 위한 함수
+       * @param {*} name
+       * @param {*} attributes
+       */
+       function ect(element, props, ...children) {
+        if (typeof element === "function") {
+          return element({ ...props, children });
+        }
+
+        let el = document.createElement(element);
+        if (props) {
+          for (let key of Object.keys(props)) {
+            let eventName = key.match(/^on([A-Z]\w+)$/);
+            if (eventName) {
+              el.addEventListener(eventName[1].toLowerCase(), props[key]);
+            } else {
+              el.setAttribute(key, props[key]);
+            }
+          }
+        }
+
+        for (let child of children) {
+          el.append(
+            child instanceof HTMLElement
+              ? child
+              : document.createTextNode(child)
+          );
+        }
+        return el;
+      }
+
+      // const a = ect("div", { class: "wow" }, "hello");
+      // console.log(a);
+
+
+      const b = ect("span", { class: "zzz" }, "자식");
+      const a = ect("div", { class: "wow" }, b);
+      console.log(a);
+    </script>
 
   </body>
 </html>
